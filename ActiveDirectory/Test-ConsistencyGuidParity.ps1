@@ -2,8 +2,8 @@
 .SYNOPSIS
   Prüft für einen UPN in mehreren AD-Forests/Domänen, ob überall dieselbe mS-DS-ConsistencyGuid gesetzt ist.
 .DESCRIPTION
-  
-- Fragt pro Forest/Domäne eigene Anmeldedaten ab (Get-Credential), speichert sie per Export-Clixml (DPAPI-geschützt).
+  - Fragt pro Forest/Domäne eigene Anmeldedaten ab (Get-Credential), speichert sie per Export-Clixml (DPAPI-geschützt).
+  - Vor der ersten Benutzung die Domains anpassen oder Parameter übergeben. Standard: 4 Einträge mit Platzhaltern.
   - Lädt gespeicherte Credentials automatisch; mit -ReenterCreds können sie erneuert werden.
   - Ermittelt Default Naming Context (RootDSE), sucht den UPN, liest mS-DS-ConsistencyGuid & objectGUID.
   - Meldet Unterschiede (Mismatch) und exportiert optional eine CSV.
@@ -18,7 +18,7 @@
 .PARAMETER IncludeObjectGuid
   Nimmt objectGUID (Base64) in die Ausgabe auf (hilfreich für Cross-Checks).
 .PARAMETER Domains
-  Liste von Forest/Domain-Definitionen (Name, Server, optional BaseDN). Standard enthält HV/FIBU/LOHN/CORP.
+  Liste von Forest/Domain-Definitionen (Name, Server, optional BaseDN). Standard: 4 Platzhalter, anpassen vor Benutzung.
 .EXAMPLE
   .\Test-ConsistencyGuidParity.ps1 -UPN "max.mustermann@cloudcoop.de"
 .EXAMPLE
@@ -205,8 +205,8 @@ if (-not $NoPersistCreds) {
 # SIG # Begin signature block
 # MIIfngYJKoZIhvcNAQcCoIIfjzCCH4sCAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCCSr+xOEAfosJjz
-# xyPA2H4ISh69qtNmjwTDobKwEcSnu6CCGbswggWNMIIEdaADAgECAhAOmxiO+dAt
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCBMSSiAjPQ82Z6F
+# QdTRp5HrJJ10ZZwdiA3Pv9GEKC1iN6CCGbswggWNMIIEdaADAgECAhAOmxiO+dAt
 # 5+/bUOIIQBhaMA0GCSqGSIb3DQEBDAUAMGUxCzAJBgNVBAYTAlVTMRUwEwYDVQQK
 # EwxEaWdpQ2VydCBJbmMxGTAXBgNVBAsTEHd3dy5kaWdpY2VydC5jb20xJDAiBgNV
 # BAMTG0RpZ2lDZXJ0IEFzc3VyZWQgSUQgUm9vdCBDQTAeFw0yMjA4MDEwMDAwMDBa
@@ -348,28 +348,28 @@ if (-not $NoPersistCreds) {
 # bDEXMBUGA1UEAxMOU2ljaGVsIFJvb3QgQ0ECE0kAAAAHpZDtUeV4UyQAAAAAAAcw
 # DQYJYIZIAWUDBAIBBQCggYQwGAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkq
 # hkiG9w0BCQMxDAYKKwYBBAGCNwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGC
-# NwIBFTAvBgkqhkiG9w0BCQQxIgQgv1cAliacG/QOF3TKLIYs/7Il3+t+cZbKRIV7
-# MhRLI6YwDQYJKoZIhvcNAQEBBQAEggEAoTyRc7LBue6m0ZT3Mny3LGNFiuER4aU+
-# 0tGGn2rxgwfQMu8HWEKg5a7F7zapikizMFgdpyp4uBVKXqeqKncFbQUAy4QD0y+1
-# R6TRD1Zxzc1t1VwEJy1rACd/vP4+9PJzO9hBXPQNR3n20BiOMGWYk3iOiAZ3Mfkl
-# 6f00kX9MubiaB5PwS3HTH+16CnCGwKMZPhRfVoh9fGA8UDl5lVlrVLShg3xurNzh
-# ujXOhXEgXybSHGNdMM3tKguGFr99P6T8Jr/cLoVgl6KniPtqCtX3p7E2CLTXme/Q
-# TsCaf0DMvIlqq9hsqDsJCqZujDqx7wXhDeGhdFze8jt1Fv7iaGoUzKGCAyYwggMi
+# NwIBFTAvBgkqhkiG9w0BCQQxIgQg9R25fAOvQJLR5eMUosmTnIQYzPkT3UodrcxU
+# djlvGRkwDQYJKoZIhvcNAQEBBQAEggEAR00TcIuvusaLwYx9pM6wTr7l1cgpfnaO
+# xaD4NHGHLy0cYZQfK4qrCdJs6eRPo2S4CyEWtSC1kFraALMIpOCv6n9SgWnV9wXl
+# JP8OX3cytv41cz5w0r25U9a7av0C8hKMDKeocHE3/GV+8RHtpfsyd6WSzFweCXal
+# Nk83hjy1htc06UuyQr1hhyyLvNMMPt71fPh2Qt+9YJ4lDK9tvWSbi68xkEQuBG6y
+# Z6I9hbiqSns0ToSUFkKdODD+6n3uJwHyuubjZgiiNQgvNSawWWzXtecQXQWabVBz
+# zRjPnqWYEKa8XaJI1gsOAuilXs8d6tVNOsb6FUE3NjVnAApgw+JAU6GCAyYwggMi
 # BgkqhkiG9w0BCQYxggMTMIIDDwIBATB9MGkxCzAJBgNVBAYTAlVTMRcwFQYDVQQK
 # Ew5EaWdpQ2VydCwgSW5jLjFBMD8GA1UEAxM4RGlnaUNlcnQgVHJ1c3RlZCBHNCBU
 # aW1lU3RhbXBpbmcgUlNBNDA5NiBTSEEyNTYgMjAyNSBDQTECEAqA7xhLjfEFgtHE
 # dqeVdGgwDQYJYIZIAWUDBAIBBQCgaTAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcB
-# MBwGCSqGSIb3DQEJBTEPFw0yNjAyMDYxMzUyNTRaMC8GCSqGSIb3DQEJBDEiBCBD
-# F7VN4G0t1htY4Nu90jlGEI4vq8AjcyrpzlkOKgo27zANBgkqhkiG9w0BAQEFAASC
-# AgBg6JyXvObgdF4FEfTpgXokLGZUgdkIcgsW0Q4nkmqCgkDNfztmIr3cJ06rGnTt
-# LkIWg64jgMd7/dklGaCfzvIxngGAORAfHZx0qWrrXD3QdS0zwRjOAodpQWVItQ7x
-# x+tr/Xt4y9nc/C3pOjFL87qVLEZD7P3bJ5GWTTuHX9PgHmmp/qrFzfn8/VkDkoWT
-# HGBzzIgT03K+tEfzpl8+icZw6Oxtca5oqadlBepzf0EJjvpVYpNkQIr3fYjoSXOv
-# o3l9h4+G5+29DmdciRE9+dgRm12d5hozjHm8hMYiozcEOja/kmILr7rbb0u/LkzP
-# KPg9AwAG8G6appf4+ihe/FOmy8hzgv3UbmD6J6Jl88Wi19Rfqzo22Jtg3Zcl8xOy
-# awS1op6BbqvYllJ79/njTbXV31YWpWJ1jwu4tvb0wmOQ5ti35qPJtHupdZw58I6i
-# tW4Wdq5Hul1VWOwMRVyUKt572ZqBAg9XW72QxkdcKRfPSFSrp8sLS7UkZU19TgW9
-# 3/j0yE8ZTyAsx9lXXNfU74YLYtKMNEA8ap/MwSvf5dJrr/T1HS6hn1zTkrS92oxz
-# mGGyn89HigslRA+TNNEXwh/IJIAgusXLwr+pg6I0qeQnpKPm15UgWwa+k2y98RYg
-# JE624lhL1I5Ku0vSEyPRhwBgio4E3EAo2eil7Hr1USsVng==
+# MBwGCSqGSIb3DQEJBTEPFw0yNjAyMDYxMzU1MjVaMC8GCSqGSIb3DQEJBDEiBCDp
+# tFNmmefAO1IZYGVVL4RTOxRcbZ701g7cvLlmZA6VKzANBgkqhkiG9w0BAQEFAASC
+# AgAm2oH448S7uK5xv0JxM23NJTOPyoJLPzPnG//OmMtei9g5mU6Pgq5Bj7pgqxb/
+# AyWiMDR1l7fLneRLwFr5SInbsa9vcnEYoHdNR3JnKzIDaV5SBoNrpLzS9kNQLynM
+# o9iDZAcg3AiQYsPD7M6SzcGlkCwUdFDD7Srlf1rgu7ipQP8ODD0KYxSGWuFNiNLH
+# HLZ5KDq72rFcMDwPC1vkGbnasHrVKjg+9m+btc3uBW55NB8qCHIpUZPW9qkvoWdR
+# pxdRjCWpICOBuCOlLMwaU+STk8th4oWuE2rb55MloDDG8XLwJYd2Litunpzdpf2R
+# hclw3T6/ARTgc7YaNJ/4WZJY6Sb4bzwfuluVqUdTPke5cZNjWSeIWZJfrFmdohld
+# H4QOTzqdE/Jy/VbB6h/cHFzsDB4+aXdelGbfH0t6cswvB3njhasmct4hAs/a+Jht
+# csmJDbwNXdRRk7OiT7F34YoKNozJ7dC00ZfQUYsEy3aWGUBdtvubebW70Jk/SeZA
+# h4m0vuUFNt85ZL2B0czQHf8GCNofiMEMQIXA1yTuiz60TO34Xsl0Fuu4Z4GkkyTw
+# 1QnADs2pWgA8gMc0bV3KBV5PiBsFks0R1NIf5iTJSu7lCctLARzVLC1cU+SgQIKe
+# rVAFsWdaJ9rqrysdPIcfrrofMzFI3/nn0kq2zI7zN05GfQ==
 # SIG # End signature block
